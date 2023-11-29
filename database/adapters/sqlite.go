@@ -3,25 +3,28 @@ package adapters
 import (
 	"fmt"
 
+	"github.com/GoLangWebSDK/records"
 	"github.com/GoLangWebSDK/records/database"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
 
-var _ database.Adapter = (*SQLite)(nil)
+var _ records.DBAdapter = (*SQLite)(nil)
 
 type SQLite struct {
 	config *database.DBConfig
 }
 
 func NewSQLite(options ...database.DatabaseOptions) *SQLite {
-	adapter := &SQLite{}
+	adapter := &SQLite{
+		config: &database.DBConfig{},
+	}
 
 	for _, option := range options {
 		option(adapter.config)
 	}
 
-	if adapter.config.DSN == "" && adapter.config == nil {
+	if adapter.config.DSN == "" && adapter.config.DBName == "" {
 		fmt.Println("Missing DSN or database configuration for SQLite adapter.") 
 		return nil
 	}
@@ -29,14 +32,10 @@ func NewSQLite(options ...database.DatabaseOptions) *SQLite {
 	return adapter
 }
 
-func (adapter *SQLite) GetDSN() string {
-	if adapter.config.DSN != "" {
-		return adapter.config.DSN
-	}
-	return adapter.config.DBName
-}
-
-func (adapter *SQLite) Gorm() (*gorm.DB, error) {
-	dsn := adapter.GetDSN()
-	return gorm.Open(sqlite.Open(dsn), &gorm.Config{})
+func (adapter *SQLite) Gorm() (gorm.Dialector, error) {
+	var dsn string
+	if adapter.config.DSN == "" {
+		dsn = adapter.config.DBName
+	}	
+	return sqlite.Open(dsn), nil
 }

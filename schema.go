@@ -16,7 +16,7 @@ type DBConfig struct {
 }
 
 type DBAdapter interface {
-	Gorm() (*gorm.Dialector, error)
+	Gorm() (gorm.Dialector, error)
 }
 
 type DBMigrator interface {
