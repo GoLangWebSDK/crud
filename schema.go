@@ -2,8 +2,6 @@ package records
 
 import (
 	"github.com/GoLangWebSDK/records/database"
-	"github.com/go-gormigrate/gormigrate/v2"
-	"gorm.io/gorm"
 )
 
 type DBConfig struct {
@@ -13,21 +11,6 @@ type DBConfig struct {
 	DBPass string
 	DBHost string
 	DBPort int
-}
-
-type DBAdapter interface {
-	Gorm() (gorm.Dialector, error)
-}
-
-type DBMigrator interface {
-	Run() error
-	AddMigrations(DBMigrations)
-	AddModels([]interface{}) 
-}
-
-type DBMigrations interface {
-	Models() []interface{}
-	GormMigrations() []*gormigrate.Migration
 }
 
 type ModelSeeder interface {

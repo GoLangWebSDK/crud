@@ -9,3 +9,4 @@ func New(adapter Adapter) *Database {
 		Adapter: adapter,
 	}
 }
+

@@ -3,13 +3,12 @@ package adapters
 import (
 	"fmt"
 
-	"github.com/GoLangWebSDK/records"
 	"github.com/GoLangWebSDK/records/database"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
 
-var _ records.DBAdapter = (*SQLite)(nil)
+var _ database.Adapter = (*SQLite)(nil)
 
 type SQLite struct {
 	config *database.DBConfig
