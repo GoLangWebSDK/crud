@@ -3,44 +3,43 @@ package gorm
 import (
 	"fmt"
 
+	"github.com/GoLangWebSDK/records"
 	"github.com/GoLangWebSDK/records/database"
 	"gorm.io/gorm"
 )
 
-type Seeder struct {
-	DB *database.Database
-	Seeders []database.ModelSeeder
-	grom *gorm.DB
+type GormSeeder struct {
+	db *database.Database
+	gorm *gorm.DB
+	seeders []records.ModelSeeder
 }
 
-var _ database.ORMSeeder = Seeder{}
-
-func NewSeeder(db *database.Database) (*Seeder, error) {
-	seeder := &Seeder{DB: db}
-	
-	orm, err := db.Adapter.Gorm()
-	if err != nil {
-		fmt.Println(err)
-		return nil, err
+func NewGormSeeder(db *database.Database) *GormSeeder {
+	var err error
+	seeder := &GormSeeder{
+		db: db,
 	}
 
-	seeder.grom = orm
-	return seeder, nil
+	seeder.gorm, err = gorm.Open(db.Adapter.Gorm(), &gorm.Config{})
+	if err != nil {
+		fmt.Println(err)
+		return nil
+	}
+	return seeder
 }
 
-func (s Seeder) AddSeeder(seeders ...database.ModelSeeder) database.ORMSeeder {
-	s.Seeders = append(s.Seeders, seeders...)
+func (s *GormSeeder) AddSeeder(seeders ...records.ModelSeeder) *GormSeeder {
+	s.seeders = append(s.seeders, seeders...)
 	return s
 }
 
-func (s Seeder) Run() error {
-	for _, seeder := range s.Seeders {
-		err := seeder.SeedModel(s.DB)
+func (s *GormSeeder) Run() error {
+	for _, seeder := range s.seeders {
+		err := seeder.SeedModel(s.db)
 		if err != nil {
-			fmt.Println(err)
-			return err
+			// tmp error handling...
+			panic(err)
 		}
 	}
-
 	return nil
 }

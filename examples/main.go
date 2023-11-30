@@ -31,3 +31,19 @@ func main() {
 		fmt.Println(user)
 	}
 }
+
+type UserRepository struct {
+	*gorm.Repository[User]
+}
+
+func NewUserRepository(db *database.Database) *UserRepository {
+	return &UserRepository{
+		Repository: gorm.NewRepository[User](db, User{}),
+	}
+}
+
+func (user *UserRepository) OrderBy(orderBy string) *UserRepository {
+	user.Repository.DB.Where("deleted_at IS NULL").Order(orderBy) 
+	return user
+}
+	

@@ -31,10 +31,10 @@ func NewSQLite(options ...database.DatabaseOptions) *SQLite {
 	return adapter
 }
 
-func (adapter *SQLite) Gorm() (gorm.Dialector, error) {
+func (adapter *SQLite) Gorm() gorm.Dialector {
 	var dsn string
 	if adapter.config.DSN == "" {
 		dsn = adapter.config.DBName
 	}	
-	return sqlite.Open(dsn), nil
+	return sqlite.Open(dsn)
 }

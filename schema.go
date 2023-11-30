@@ -4,15 +4,6 @@ import (
 	"github.com/GoLangWebSDK/records/database"
 )
 
-type DBConfig struct {
-	DSN    string
-	DBName string
-	DBUser string
-	DBPass string
-	DBHost string
-	DBPort int
-}
-
 type ModelSeeder interface {
 	SeedModel(*database.Database) error
 }
