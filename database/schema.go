@@ -23,5 +23,14 @@ type Migrator interface {
 	Gorm() []*gormigrate.Migration
 }
 
+type ModelSeeder interface {
+	SeedModel(*Database) error
+}
+
+type ORMSeeder interface {
+	Run() error
+	AddSeeder(seeders ...ModelSeeder) ORMSeeder
+}
+
 
 

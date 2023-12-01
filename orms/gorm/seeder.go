@@ -3,7 +3,6 @@ package gorm
 import (
 	"fmt"
 
-	"github.com/GoLangWebSDK/records"
 	"github.com/GoLangWebSDK/records/database"
 	"gorm.io/gorm"
 )
@@ -11,7 +10,7 @@ import (
 type GormSeeder struct {
 	db *database.Database
 	gorm *gorm.DB
-	seeders []records.ModelSeeder
+	seeders []database.ModelSeeder
 }
 
 func NewGormSeeder(db *database.Database) *GormSeeder {
@@ -28,7 +27,7 @@ func NewGormSeeder(db *database.Database) *GormSeeder {
 	return seeder
 }
 
-func (s *GormSeeder) AddSeeder(seeders ...records.ModelSeeder) *GormSeeder {
+func (s *GormSeeder) AddSeeder(seeders ...database.ModelSeeder) *GormSeeder {
 	s.seeders = append(s.seeders, seeders...)
 	return s
 }
