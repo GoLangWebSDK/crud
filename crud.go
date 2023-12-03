@@ -1,4 +1,4 @@
-package records
+package crud
 
 type Repository[T any] interface {
 	All() ([]T, error)
