@@ -19,8 +19,14 @@ type Adapter interface {
 }
 
 type Migrator interface {
+	Run() error
+	AddModels([]interface{}) 	
+	AddMigrations(Migrations)
+}
+
+type Migrations interface {
 	Models() []interface{}
-	Gorm() []*gormigrate.Migration
+	GormMigrations() []*gormigrate.Migration
 }
 
 type ModelSeeder interface {
@@ -31,6 +37,3 @@ type ORMSeeder interface {
 	Run() error
 	AddSeeder(seeders ...ModelSeeder) ORMSeeder
 }
-
-
-
