@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/GoLangWebSDK/records/database"
+	"github.com/GoLangWebSDK/crud/database"
 	"github.com/go-gormigrate/gormigrate/v2"
 	"gorm.io/gorm"
 )

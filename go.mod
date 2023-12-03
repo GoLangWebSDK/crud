@@ -1,4 +1,4 @@
-module github.com/GoLangWebSDK/records
+module github.com/GoLangWebSDK/crud
 
 go 1.20
 

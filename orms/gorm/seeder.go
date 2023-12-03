@@ -3,7 +3,7 @@ package gorm
 import (
 	"fmt"
 
-	"github.com/GoLangWebSDK/records/database"
+	"github.com/GoLangWebSDK/crud/database"
 	"gorm.io/gorm"
 )
 

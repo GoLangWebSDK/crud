@@ -3,7 +3,7 @@ package adapters
 import (
 	"fmt"
 
-	"github.com/GoLangWebSDK/records/database"
+	"github.com/GoLangWebSDK/crud/database"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )

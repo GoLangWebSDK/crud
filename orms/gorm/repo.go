@@ -3,12 +3,13 @@ package gorm
 import (
 	"fmt"
 
-	"github.com/GoLangWebSDK/records"
-	"github.com/GoLangWebSDK/records/database"
+	"github.com/GoLangWebSDK/crud"
+	"github.com/GoLangWebSDK/crud/database"
 	"gorm.io/gorm"
 )
 
-var _ records.Repository[any] = (*Repository[any])(nil)
+
+var _ crud.Repository[any] = (*Repository[any])(nil)
 
 type Repository[T any] struct {
 	DB 						 *gorm.DB
