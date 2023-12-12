@@ -19,31 +19,26 @@ type Repository[T any] struct {
 
 func NewRepository[T any](db *database.Database, model T) *Repository[T] {
 	repo := &Repository[T]{
+		DB: db.Adapter.Gorm(),
 		Model: model,
 		deletedAtQuery: "%s.deleted_at IS NULL",
 	}
-	
-	gorm, err := gorm.Open(db.Adapter.Gorm(), &gorm.Config{})
-	if err != nil {
-		fmt.Println(err)
-		return nil
-	}
-	repo.DB = gorm
 	return repo
 }
 
-func (repo *Repository[T]) All() ([]T, error) {
+func (repo *Repository[T]) Create(model T) error {
+	return repo.DB.Create(&model).Error
+}
+
+func (repo *Repository[T]) ReadAll() ([]T, error) {
 	results := []T{}
+	
 	err := repo.DB.Find(&results).Error
 	if err != nil {
 		return nil, err
 	}
 	
 	return results, nil
-}
-
-func (repo *Repository[T]) Create(model T) error {
-	return repo.DB.Create(&model).Error
 }
 
 func (repo *Repository[T]) Read(ID uint32) (T, error) {

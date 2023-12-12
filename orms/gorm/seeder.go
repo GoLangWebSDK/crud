@@ -14,17 +14,10 @@ type GormSeeder struct {
 }
 
 func NewGormSeeder(db *database.Database) *GormSeeder {
-	var err error
-	seeder := &GormSeeder{
+	return &GormSeeder{
 		db: db,
+		gorm: db.Adapter.Gorm(),
 	}
-
-	seeder.gorm, err = gorm.Open(db.Adapter.Gorm(), &gorm.Config{})
-	if err != nil {
-		fmt.Println(err)
-		return nil
-	}
-	return seeder
 }
 
 func (s *GormSeeder) AddSeeder(seeders ...database.ModelSeeder) *GormSeeder {
@@ -36,8 +29,8 @@ func (s *GormSeeder) Run() error {
 	for _, seeder := range s.seeders {
 		err := seeder.SeedModel(s.db)
 		if err != nil {
-			// tmp error handling...
-			panic(err)
+			fmt.Printf("Failed to seed model: %s\n", err)
+			return err
 		}
 	}
 	return nil

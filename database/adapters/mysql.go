@@ -10,6 +10,7 @@ import (
 
 type MySql struct {
 	config *database.DBConfig
+	gorm *gorm.DB
 }
 
 func NewMySQL(options ...database.DatabaseOptions) *MySql {
@@ -26,10 +27,21 @@ func NewMySQL(options ...database.DatabaseOptions) *MySql {
 		return nil
 	}
 
+	gorm, err := gorm.Open(adapter.open(), &gorm.Config{})
+	if err != nil {
+		fmt.Println("Failed to open MySQL database:", err)
+		return nil
+	}
+
+	adapter.gorm = gorm
 	return adapter
 }
 
-func (adapter *MySql) Gorm() gorm.Dialector {
+func (adapter *MySql) Gorm() *gorm.DB {
+	return adapter.gorm
+}
+
+func (adapter *MySql) open() gorm.Dialector {
 	dsn := "%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local"
 	if adapter.config.DSN == "" {
 		adapter.config.DSN = fmt.Sprintf(dsn,

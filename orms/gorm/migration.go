@@ -12,24 +12,16 @@ import (
 var _ database.Migrator = (*GormMigrator)(nil)
 
 type GormMigrator struct {
-	db 				 *database.Database
-	gorm 			 *gorm.DB
+	DB 				 *gorm.DB
 	Migrations []*gormigrate.Migration
 	Models     []interface{}
 } 
 
 func NewGormMigrator(db *database.Database) *GormMigrator {
 	migrations := &GormMigrator{
-		db: db,
+		DB: db.Adapter.Gorm(),
 	}
 
-	gorm, err := gorm.Open(db.Adapter.Gorm(), &gorm.Config{})
-	if err != nil {
-		fmt.Print(err)
-		return nil
-	}
-
-	migrations.gorm = gorm
 	return migrations
 }
 
@@ -52,7 +44,7 @@ func (migrator *GormMigrator) Run() error {
 		return errors.New("No migrations to run!")
 	}
 
-	migration := gormigrate.New(migrator.gorm, gormigrate.DefaultOptions, migrator.Migrations)
+	migration := gormigrate.New(migrator.DB, gormigrate.DefaultOptions, migrator.Migrations)
 	migration.InitSchema(func(tx *gorm.DB) error {
 		err := tx.AutoMigrate(migrator.Models...)
 		if err != nil {
@@ -70,7 +62,7 @@ func (migrator *GormMigrator) Run() error {
 }
 
 func (migrator *GormMigrator) migrateModels() error {
-	stmt := &gorm.Statement{DB: migrator.gorm}
+	stmt := &gorm.Statement{DB: migrator.DB}
 
 	if len(migrator.Models) == 0 {
 		return errors.New("No models to migrate!")

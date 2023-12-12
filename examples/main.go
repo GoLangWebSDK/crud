@@ -23,7 +23,7 @@ func main() {
 
 	users := gorm.NewRepository[User](db, User{})
 
-	allUsers, err := users.All()
+	allUsers, err := users.ReadAll()
 
 	if err != nil {
 		fmt.Println(err)

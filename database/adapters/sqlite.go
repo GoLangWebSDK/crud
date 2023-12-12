@@ -12,6 +12,7 @@ var _ database.Adapter = (*SQLite)(nil)
 
 type SQLite struct {
 	config *database.DBConfig
+	gorm *gorm.DB
 }
 
 func NewSQLite(options ...database.DatabaseOptions) *SQLite {
@@ -28,10 +29,21 @@ func NewSQLite(options ...database.DatabaseOptions) *SQLite {
 		return nil
 	}
 
+	gorm, err := gorm.Open(adapter.open(), &gorm.Config{})
+	if err != nil {
+		fmt.Println("Failed to open SQLite database:", err)
+		return nil
+	}
+
+	adapter.gorm = gorm
 	return adapter
 }
 
-func (adapter *SQLite) Gorm() gorm.Dialector {
+func (adapter *SQLite) Gorm() *gorm.DB {
+	return adapter.gorm
+}
+
+func (adapter *SQLite) open() gorm.Dialector {
 	var dsn string
 	if adapter.config.DSN == "" {
 		dsn = adapter.config.DBName
