@@ -1,9 +1,9 @@
 package crud
 
 type Repository[T any] interface {
-	Create(model T) error
-	Read(ID uint32) (T, error)
+	Create(model T) (T, error)
+	Read(ID uint) (T, error)
 	ReadAll() ([]T, error)
-	Update(ID uint32, model T) error
-	Delete(ID uint32) error
+	Update(ID uint, model T) (T, error)
+	Delete(ID uint) error
 }

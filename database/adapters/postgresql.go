@@ -53,5 +53,5 @@ func (adapter *Postgres) open() gorm.Dialector {
 			adapter.config.DBPort,
 		)
 	}	
-	return postgres.Open(dsn)
+	return postgres.Open(adapter.config.DSN)
 }

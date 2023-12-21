@@ -8,66 +8,75 @@ import (
 	"gorm.io/gorm"
 )
 
-
 var _ crud.Repository[any] = (*Repository[any])(nil)
 
 type Repository[T any] struct {
-	DB 						 *gorm.DB
-	Model 				 T
+	DB             *gorm.DB
+	Model          T
 	deletedAtQuery string
 }
 
 func NewRepository[T any](db *database.Database, model T) *Repository[T] {
 	repo := &Repository[T]{
-		DB: db.Adapter.Gorm(),
-		Model: model,
+		DB:             db.Adapter.Gorm(),
+		Model:          model,
 		deletedAtQuery: "%s.deleted_at IS NULL",
 	}
 	return repo
 }
 
-func (repo *Repository[T]) Create(model T) error {
-	return repo.DB.Create(&model).Error
+func (repo *Repository[T]) Create(model T) (T, error) {
+	err := repo.DB.Create(&model).Error
+	if err != nil {
+		return model, err
+	}
+	return model, nil
 }
 
 func (repo *Repository[T]) ReadAll() ([]T, error) {
-	results := []T{}
-	
-	err := repo.DB.Find(&results).Error
+	records := []T{}
+
+	err := repo.DB.Find(&records).Error
 	if err != nil {
 		return nil, err
 	}
-	
-	return results, nil
+
+	return records, nil
 }
 
-func (repo *Repository[T]) Read(ID uint32) (T, error) {
-	err := repo.DB.Where("id = ?", ID).First(&repo.Model).Error
+func (repo *Repository[T]) Read(ID uint) (T, error) {
+	var record T
+	err := repo.DB.Where("id = ?", ID).First(&record).Error
 	if err != nil {
-		return repo.Model, err
+		return record, err
 	}
-	
-	return repo.Model, nil	
+
+	return record, nil
 }
 
-func (repo *Repository[T]) Update(ID uint32, model T) error {
+func (repo *Repository[T]) Update(ID uint, model T) (T, error) {
 	if ID == 0 {
-		return fmt.Errorf("Missing ID")
+		return model, fmt.Errorf("missing ID")
 	}
 
-	err := repo.DB.First(&repo.Model, ID).Error
+	err := repo.DB.First(&model, ID).Error
 	if err != nil {
-		return err
+		return model, err
 	}
 
-	return repo.DB.Model(&model).Where("id = ?", ID).Updates(model).Error
+	err = repo.DB.Model(&model).Where("id = ?", ID).Updates(model).Error
+	if err != nil {
+		return model, err
+	}
+
+	return model, nil
 }
 
-func (repo *Repository[T]) Delete(ID uint32) error {
+func (repo *Repository[T]) Delete(ID uint) error {
 	if ID == 0 {
-		return fmt.Errorf("Missing ID")
+		return fmt.Errorf("missing ID")
 	}
-	
+
 	err := repo.DB.First(&repo.Model, ID).Error
 	if err != nil {
 		return err
