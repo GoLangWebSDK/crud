@@ -3,8 +3,8 @@ package gorm
 import (
 	"fmt"
 
-	"github.com/GoLangWebSDK/crud"
-	"github.com/GoLangWebSDK/crud/database"
+	"github.com/AstroSynapseAI/app-service/sdk/crud"
+	"github.com/AstroSynapseAI/app-service/sdk/crud/database"
 	"gorm.io/gorm"
 )
 
@@ -54,22 +54,22 @@ func (repo *Repository[T]) Read(ID uint) (T, error) {
 	return record, nil
 }
 
-func (repo *Repository[T]) Update(ID uint, model T) (T, error) {
+func (repo *Repository[T]) Update(ID uint, data T) (T, error) {
 	if ID == 0 {
-		return model, fmt.Errorf("missing ID")
+		return repo.Model, fmt.Errorf("missing ID")
 	}
 
-	err := repo.DB.First(&model, ID).Error
+	err := repo.DB.First(&repo.Model, ID).Error
 	if err != nil {
-		return model, err
+		return repo.Model, err
 	}
 
-	err = repo.DB.Model(&model).Where("id = ?", ID).Updates(model).Error
+	err = repo.DB.Model(&repo.Model).Where("id = ?", ID).Updates(data).Error
 	if err != nil {
-		return model, err
+		return repo.Model, err
 	}
 
-	return model, nil
+	return repo.Model, nil
 }
 
 func (repo *Repository[T]) Delete(ID uint) error {
