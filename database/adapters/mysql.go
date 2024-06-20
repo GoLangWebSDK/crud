@@ -3,14 +3,14 @@ package adapters
 import (
 	"fmt"
 
-	"github.com/AstroSynapseAI/app-service/sdk/crud/database"
+	"github.com/GoLangWebSDK/crud/database"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
 
 type MySql struct {
 	config *database.DBConfig
-	gorm *gorm.DB
+	gorm   *gorm.DB
 }
 
 func NewMySQL(options ...database.DatabaseOptions) *MySql {
@@ -23,7 +23,7 @@ func NewMySQL(options ...database.DatabaseOptions) *MySql {
 	}
 
 	if adapter.config.DSN == "" && adapter.config.DBName == "" {
-		fmt.Println("Missing DSN or database configuration for MySQL adapter.") 
+		fmt.Println("Missing DSN or database configuration for MySQL adapter.")
 		return nil
 	}
 
@@ -51,6 +51,7 @@ func (adapter *MySql) open() gorm.Dialector {
 			adapter.config.DBPort,
 			adapter.config.DBName,
 		)
-	}	
+	}
 	return mysql.Open(dsn)
 }
+

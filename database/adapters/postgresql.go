@@ -3,14 +3,14 @@ package adapters
 import (
 	"fmt"
 
-	"github.com/AstroSynapseAI/app-service/sdk/crud/database"
+	"github.com/GoLangWebSDK/crud/database"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
 type Postgres struct {
 	config *database.DBConfig
-	gorm *gorm.DB
+	gorm   *gorm.DB
 }
 
 func NewPostgres(options ...database.DatabaseOptions) *Postgres {
@@ -23,7 +23,7 @@ func NewPostgres(options ...database.DatabaseOptions) *Postgres {
 	}
 
 	if adapter.config.DSN == "" && adapter.config.DBName == "" {
-		fmt.Println("Missing DSN or database configuration for Postgres adapter.") 
+		fmt.Println("Missing DSN or database configuration for Postgres adapter.")
 		return nil
 	}
 
@@ -35,7 +35,7 @@ func NewPostgres(options ...database.DatabaseOptions) *Postgres {
 
 	adapter.gorm = gorm
 
-	return adapter	
+	return adapter
 }
 
 func (adapter *Postgres) Gorm() *gorm.DB {
@@ -52,6 +52,7 @@ func (adapter *Postgres) open() gorm.Dialector {
 			adapter.config.DBName,
 			adapter.config.DBPort,
 		)
-	}	
+	}
 	return postgres.Open(adapter.config.DSN)
 }
+

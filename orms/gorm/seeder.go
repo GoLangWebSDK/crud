@@ -3,7 +3,7 @@ package gorm
 import (
 	"fmt"
 
-	"github.com/AstroSynapseAI/app-service/sdk/crud/database"
+	"github.com/GoLangWebSDK/crud/database"
 	"gorm.io/gorm"
 )
 

@@ -3,7 +3,7 @@ package adapters
 import (
 	"fmt"
 
-	"github.com/AstroSynapseAI/app-service/sdk/crud/database"
+	"github.com/GoLangWebSDK/crud/database"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
@@ -12,7 +12,7 @@ var _ database.Adapter = (*SQLite)(nil)
 
 type SQLite struct {
 	config *database.DBConfig
-	gorm *gorm.DB
+	gorm   *gorm.DB
 }
 
 func NewSQLite(options ...database.DatabaseOptions) *SQLite {
@@ -25,7 +25,7 @@ func NewSQLite(options ...database.DatabaseOptions) *SQLite {
 	}
 
 	if adapter.config.DSN == "" && adapter.config.DBName == "" {
-		fmt.Println("Missing DSN or database configuration for SQLite adapter.") 
+		fmt.Println("Missing DSN or database configuration for SQLite adapter.")
 		return nil
 	}
 
@@ -47,6 +47,7 @@ func (adapter *SQLite) open() gorm.Dialector {
 	var dsn string
 	if adapter.config.DSN == "" {
 		dsn = adapter.config.DBName
-	}	
+	}
 	return sqlite.Open(dsn)
 }
+

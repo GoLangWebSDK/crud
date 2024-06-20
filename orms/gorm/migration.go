@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/AstroSynapseAI/app-service/sdk/crud/database"
+	"github.com/GoLangWebSDK/crud/database"
 	"github.com/go-gormigrate/gormigrate/v2"
 	"gorm.io/gorm"
 )
@@ -90,4 +90,3 @@ func (migrator *GormMigrator) migrateModels() error {
 
 	return nil
 }
-
