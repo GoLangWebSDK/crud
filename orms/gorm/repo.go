@@ -26,7 +26,7 @@ func NewRepository[T any](db *database.Database, model T) *Repository[T] {
 }
 
 func (repo *Repository[T]) Create(model T) (T, error) {
-	err := repo.DB.Create(&model).Error
+	err := repo.DB.Create(model).Error
 	if err != nil {
 		return model, err
 	}
@@ -36,7 +36,7 @@ func (repo *Repository[T]) Create(model T) (T, error) {
 func (repo *Repository[T]) ReadAll() ([]T, error) {
 	records := []T{}
 
-	err := repo.DB.Find(&records).Error
+	err := repo.DB.Find(records).Error
 	if err != nil {
 		return nil, err
 	}
@@ -59,12 +59,12 @@ func (repo *Repository[T]) Update(ID uint, data T) (T, error) {
 		return repo.Model, fmt.Errorf("missing ID")
 	}
 
-	err := repo.DB.First(&repo.Model, ID).Error
+	err := repo.DB.First(repo.Model, ID).Error
 	if err != nil {
 		return repo.Model, err
 	}
 
-	err = repo.DB.Model(&repo.Model).Where("id = ?", ID).Updates(data).Error
+	err = repo.DB.Model(repo.Model).Where("id = ?", ID).Updates(data).Error
 	if err != nil {
 		return repo.Model, err
 	}
@@ -77,10 +77,10 @@ func (repo *Repository[T]) Delete(ID uint) error {
 		return fmt.Errorf("missing ID")
 	}
 
-	err := repo.DB.First(&repo.Model, ID).Error
+	err := repo.DB.First(repo.Model, ID).Error
 	if err != nil {
 		return err
 	}
 
-	return repo.DB.Delete(&repo.Model, ID).Error
+	return repo.DB.Delete(repo.Model, ID).Error
 }
