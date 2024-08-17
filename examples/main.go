@@ -21,7 +21,7 @@ func main() {
 	migrations := gorm.NewGormMigrator(db)
 	migrations.Run()
 
-	users := gorm.NewRepository[User](db, User{})
+	users := gorm.NewRepository[User](db)
 
 	allUsers, err := users.ReadAll()
 
@@ -33,4 +33,4 @@ func main() {
 		fmt.Println(user)
 	}
 }
-	
+
